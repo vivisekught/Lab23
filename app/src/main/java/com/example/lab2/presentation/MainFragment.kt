@@ -1,13 +1,16 @@
-package com.example.lab2
+package com.example.lab2.presentation
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.lab2.R
 import com.example.lab2.databinding.MainPageBinding
+
 
 class MainFragment : Fragment() {
 
@@ -68,6 +71,14 @@ class MainFragment : Fragment() {
             okButton.setOnClickListener {
                 tvResult.text = viewModel.getResult()
             }
+            moveToHistory.setOnClickListener {
+                val fragmentManager = requireActivity().supportFragmentManager
+                fragmentManager.beginTransaction().apply {
+                    replace(R.id.main_container_view, UserChoicesHistoryFragment.newInstance())
+                    addToBackStack(null)
+                    commit()
+                }
+            }
         }
     }
 
@@ -75,6 +86,11 @@ class MainFragment : Fragment() {
         viewModel.selectionError.observe(viewLifecycleOwner) {
             if (it) {
                 onSelectionError.onSelectionError()
+            }
+        }
+        viewModel.addedToDb.observe(viewLifecycleOwner){
+            if (it){
+                Toast.makeText(requireContext(), "Added to history", Toast.LENGTH_SHORT).show()
             }
         }
     }
