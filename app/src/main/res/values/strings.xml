@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Lab2</string>
+    <string name="perimeter">Perimeter</string>
+    <string name="area">Area</string>
+    <string name="calculate_title">Get what you need to know</string>
+    <string name="figure_title">Figure</string>
+    <string name="circle">Circle</string>
+    <string name="square">Square</string>
+    <string name="triangle">Triangle</string>
+    <string name="trapezoid">Trapezoid</string>
+    <string name="ok">OK</string>
+    <string name="selected_flags">Selected Flags:\n</string>
+    <string name="selected_figure">Selected Figure:\n</string>
+    <string name="error_message">Input all data!\n</string>
+</resources>
