@@ -5,18 +5,22 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.lab2.data.RepositoryImpl
-import com.example.lab2.domain.AddUserChoiceUseCase
+import com.example.lab2.data.AppDatabase
+import com.example.lab2.data.Mapper
 import com.example.lab2.domain.UserChoice
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var _selectionError = MutableLiveData<Boolean>()
+    private val userChoiceDao = AppDatabase.getInstance(application).userChoiceDao()
+    private val mapper = Mapper()
+
+
+    private var _selectionError = MutableLiveData(false)
     val selectionError: LiveData<Boolean>
         get() = _selectionError
 
-    private var _addedToDb = MutableLiveData<Boolean>()
+    private var _addedToDb = MutableLiveData<Boolean>(false)
     val addedToDb: LiveData<Boolean>
         get() = _addedToDb
 
@@ -24,9 +28,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var flags = mutableListOf<Flag>()
     private var figure: Figure? = null
 
-
-    private val repositoryImpl = RepositoryImpl(application)
-    private val addUserChoiceUseCase = AddUserChoiceUseCase(repositoryImpl)
 
     fun addFigureToResult(figure: Figure) {
         this.figure = figure
@@ -43,8 +44,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun addUserChoice() {
         viewModelScope.launch {
             val userChoice = UserChoice(flags = flags.joinToString(), figure.toString())
-            addUserChoiceUseCase(userChoice)
+            userChoiceDao.addUserChoice(mapper.mapEntityToDbModel(userChoice))
             _addedToDb.value = true
+            _addedToDb.value = false
         }
     }
 

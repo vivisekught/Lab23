@@ -1,6 +1,5 @@
 package com.example.lab2.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,20 +17,10 @@ class MainFragment : Fragment() {
         ViewModelProvider(this)[MainViewModel::class.java]
     }
 
-    private lateinit var onSelectionError: OnSelectionErrorListener
 
     private var _binding: MainPageBinding? = null
     private val binding: MainPageBinding
         get() = _binding ?: throw RuntimeException("MainPageBinding == null")
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnSelectionErrorListener) {
-            onSelectionError = context
-        } else {
-            throw RuntimeException("Activity must implement OnError")
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,7 +74,7 @@ class MainFragment : Fragment() {
     private fun setObservers() {
         viewModel.selectionError.observe(viewLifecycleOwner) {
             if (it) {
-                onSelectionError.onSelectionError()
+                Toast.makeText(requireContext(), "Error selection", Toast.LENGTH_SHORT).show()
             }
         }
         viewModel.addedToDb.observe(viewLifecycleOwner){
@@ -100,12 +89,6 @@ class MainFragment : Fragment() {
         setObservers()
         setBindings()
     }
-
-    interface OnSelectionErrorListener {
-
-        fun onSelectionError()
-    }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
